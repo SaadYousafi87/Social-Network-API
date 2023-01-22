@@ -13,7 +13,7 @@ const userSchema = new Schema(
             type: String,
             required: true,
             unique: true,
-            // Must match a valid email address (look into Mongoose's matching validation)
+            validate: /^([a-z0-9_\.-]+)@([\da-z\.-]+)\.([a-z\.]{2,6})$/,
         },
         thoughts: [
             {
@@ -32,7 +32,7 @@ const userSchema = new Schema(
 
 userSchema.virtual('friendCount').get(function(){
     return this.friends.length;
-})
+});
 
 const User = model('user', userSchema);
 module.exports = User;
