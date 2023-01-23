@@ -25,5 +25,13 @@ module.exports = {
     // delete a thought by its id
     deleteThought(req, res) {
         return res.json({"message": "API to delete thought by id is called"});
-    }
+    },
+
+    createReaction(req, res){
+        return res.json({"message": "API to create reaction is called"});
+    },
+
+    deleteReaction(req, res){
+        return res.json({"message": "API to remove reaction is called"});
+    },
 };

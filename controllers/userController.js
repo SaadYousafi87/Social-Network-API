@@ -28,4 +28,14 @@ module.exports = {
     deleteUser(req, res) {
         return res.json({"message": "API to delete user is called"});
     },
+
+    // post to add a new friend to a user's friend list
+    createFriend(req, res){
+        return res.json({"message": "API to create new friend is called"});
+    },
+
+    // delete to remove a friend from a user's friend list
+    deleteFriend(req, res){
+        return res.json({"message": "API to delete friend is called"});
+    },
 };
