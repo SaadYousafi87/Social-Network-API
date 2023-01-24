@@ -1,32 +1,57 @@
 const {ObjectId} = require('mongoose').Types;
-// const {user, thought, reaction} = require('../models');
+const {User, Thought} = require('../models');
 
 
 module.exports = {
     // Get all users
     getAllUsers(req, res) {
-        return res.json({"message": "API to get all users called"});
+        User.find().then((users) => res.json(users)).catch((err) => res.status(500).json(err));
     },
 
     // Create a new user
     createUser(req, res) {
-        return res.json({"message": "API to create new user is called"});
+        User.create(req.body)
+        .then((dbUserData) => res.json(dbUserData))
+        .catch((err) => res.status(500).json(err));
     },
 
     // Get a single user by its id
     getSingleUser(req, res) {
-        return res.json({"message": "API to get single user is called"});
+        User.findOne({ _id: req.params.userId })
+        .select('-__v')
+        .then((user) =>
+            !user
+            ? res.status(404).json({ message: 'No user with that ID' })
+            : res.json(user)
+      )
+      .catch((err) => res.status(500).json(err));
     },
 
     // update a user by its id
     updateUser(req, res) {
-        return res.json({"message": "API to update user is called"});
+        User.findOneAndUpdate({_id: req.params.userId}, {username: req.body.username}, {new: true, upsert: true}, (err, result) => {
+            if(result){
+                res.status(200).json(result);
+                console.log(`Updated: ${result}`);
+            }else{
+                console.log('Something went wrong');
+                res.status(500).json({message: 'something went wrong'});
+            }
+        });
     },
 
     // delete a user by its id
     // bonus: remove a user's associated thoughts when deleted.
     deleteUser(req, res) {
-        return res.json({"message": "API to delete user is called"});
+        User.findOneAndDelete({_id: req.params.userId}, (err, result) => {
+            if(result){
+                res.status(200).json(result);
+                console.log(`Deleted: ${result}`);
+            }else{
+                console.log('Something went wrong');
+                res.status(500).json({message: 'something went wrong'});
+            }
+        });
     },
 
     // post to add a new friend to a user's friend list
