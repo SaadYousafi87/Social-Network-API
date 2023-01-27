@@ -56,11 +56,27 @@ module.exports = {
 
     // post to add a new friend to a user's friend list
     createFriend(req, res){
-        return res.json({"message": "API to create new friend is called"});
+        User.findOneAndUpdate(
+            {_id: req.params.userId},
+            {$addToSet: {friends: req.params.friendId}},
+            {runValidators: true, new: true}
+        ).then((user) => 
+            !user
+                ? res.status(404).json({message: "No user found with that ID :("})
+                : res.json(user)
+            ).catch((err) => res.status(500).json(err));
     },
 
     // delete to remove a friend from a user's friend list
     deleteFriend(req, res){
-        return res.json({"message": "API to delete friend is called"});
+        User.findOneAndUpdate(
+            {_id: req.params.userId},
+            {$pull: {friends: req.params.friendId}},
+            {runValidators: true, new: true}
+        ).then((user) => 
+            !user
+                ? res.status(404).json({message: "No user found with that ID :("})
+                : res.json(user)
+        ).catch((err) => res.status(500).json(err));
     },
 };
